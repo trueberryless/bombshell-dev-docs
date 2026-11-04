@@ -161,4 +161,16 @@ const markdownHref =
 	});
 	initTocMarker();
 	alignTopicsRule();
+
+	// Start observing below a scrolled-to heading, whose wrapper maps to the previous one
+	customElements.whenDefined("starlight-toc").then((TOC) => {
+		TOC.prototype.getRootMargin = function () {
+			const header = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+			const mobileToc = this.querySelector("summary")?.getBoundingClientRect().height ?? 0;
+			const top = header + mobileToc + 104;
+			const bottom = top + 53;
+			return `-${top}px 0% ${bottom - document.documentElement.clientHeight}px`;
+		};
+		window.dispatchEvent(new Event("resize"));
+	});
 </script>
